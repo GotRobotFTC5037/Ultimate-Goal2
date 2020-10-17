@@ -29,8 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.spartronics4915.lib.T265Camera;
+
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
 
@@ -54,6 +59,7 @@ public class PushbotTeleop extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
+    Transform2d cameraToRobot = new Transform2d();
 
 
     @Override
@@ -68,21 +74,27 @@ public class PushbotTeleop extends LinearOpMode {
         double r;
         double robotAngle;
         double driveSpeed = 1;
+        // Increase this value to trust encoder odometry less when fusing encoder measurements with VSLAM
+        double encoderMeasurementCovariance = 0.8;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        Pose2d startingPose = new Pose2d(1, 1, new Rotation2d());
+      //  T265Camera slamra = new T265Camera(cameraToRobot, encoderMeasurementCovariance);
+//
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Pushbot:", "Hello Driver");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+      //  slamra.start();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+          //  slamra.getLastReceivedCameraUpdate();
             double armCurr = robot.arm.getPosition();
             double gripCurr = robot.arm.getPosition();
             double rightX = gamepad1.right_stick_x;
